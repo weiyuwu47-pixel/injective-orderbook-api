@@ -3,10 +3,10 @@ import httpx
 
 app = FastAPI(title="Ninja API Forge - Injective Spot APIs")
 
-# 链上基础数据（你已经跑通）
+# 链上基础数据
 INJ_LCD = "https://sentry.lcd.injective.network:443"
 
-# 交易/订单簿数据：Injective Indexer（你刚验证 spot/v1/markets 可用）
+# 交易/订单簿数据：Injective Indexer
 INJ_INDEXER = "https://sentry.exchange.grpc-web.injective.network"
 
 
@@ -30,8 +30,7 @@ async def upstream_health():
 
 
 @app.get("/spot/markets")
-async def spot_markets(limit: int = Query(20, ge=1, le=200)):
-    """
+async def spot_markets(limit: int = Query(20, ge=1, le=200)):# Limit the number of returned items (default 20, min 1, max 200).    """
     现货市场列表（清洗后输出）
     """
     url = f"{INJ_INDEXER}/api/exchange/spot/v1/markets"
@@ -82,8 +81,8 @@ async def orderbook(
         raise HTTPException(status_code=502, detail=f"upstream error: {e}")
 
     ob = data.get("orderbook", {})
-    buys = ob.get("buys", [])   # 买单（可能存在）
-    sells = ob.get("sells", []) # 卖单（你刚刚看到的就是 sells）
+    buys = ob.get("buys", [])   # 买单
+    sells = ob.get("sells", []) # 卖单
 
     def norm(levels):
         out = []
